@@ -1,5 +1,5 @@
 
-#vcf stored in: /data/kelley/projects/pmex/capture/combined.vcf.gz
+#vcf stored in: /hb/groups/kelley_lab/Rishi/hybrid_check
 
 #Pi, theta, fst, PCA of Puya parental populations (have vcf file)
 #How much N/S - partitioning across samples, how many fixed differences
