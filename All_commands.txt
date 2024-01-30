@@ -1,0 +1,11 @@
+
+#vcf stored in: /data/kelley/projects/pmex/capture/combined.vcf.gz
+
+#Pi, theta, fst, PCA of Puya parental populations (have vcf file)
+#How much N/S - partitioning across samples, how many fixed differences
+#First dataset to do this with is vcf
+#The other is wild transcriptomes - more genome-wide (but transcriptome) - no data for differentially expressed regions (2016 Kelley MBE)
+#ACTION ITEMS
+#Download and map transcriptomes to pmex genome (whichever kara used)
+#Partition VCF
+#Look at PCA differences
