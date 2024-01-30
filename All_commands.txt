@@ -9,3 +9,6 @@
 #Download and map transcriptomes to pmex genome (whichever kara used)
 #Partition VCF
 #Look at PCA differences
+
+#first convert to geno format to run genomics_general scripts on
+
