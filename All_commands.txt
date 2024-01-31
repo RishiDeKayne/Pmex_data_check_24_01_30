@@ -10,5 +10,57 @@
 #Partition VCF
 #Look at PCA differences
 
-#first convert to geno format to run genomics_general scripts on
+#Indivs:
+#LUV = La Lluvia (LLU) - Pmex, Sulfidic
+#VG = Vicento Guerrero (VG) - Pmex, Non-sulfidic
 
+Lluvia151,LUV
+Lluvia152,LUV
+Lluvia153,LUV
+Lluvia155,LUV
+Lluvia156,LUV
+Lluvia159,LUV
+Lluvia160,LUV
+Lluvia163,LUV
+Lluvia164,LUV
+Lluvia165,LUV
+Lluvia166,LUV
+Lluvia167,LUV
+Lluvia168,LUV
+Lluvia169,LUV
+Lluvia172,LUV
+Lluvia174,LUV
+Lluvia176,LUV
+Lluvia177,LUV
+Lluvia178,LUV
+Lluvia180,LUV
+VG184,VG  
+VG185,VG  
+VG186,VG  
+VG191,VG  
+VG192,VG  
+VG193,VG  
+VG194r,VG  
+VG195,VG  
+VG196,VG  
+VG197,VG  
+VG200,VG  
+VG202,VG  
+VG203,VG  
+VG204,VG  
+VG205,VG  
+VG206r,VG  
+VG207,VG  
+VG208,VG  
+VG209,VG  
+VG210,VG  
+
+sed -i 's/,/\t/g' indiv_raw.txt
+cut -f1 indiv_raw.txt > samples.txt
+
+bcftools view -S ./samples.txt -Oz -o combined_LUV_VG_indivs.vcf.gz /hb/groups/kelley_lab/Rishi/hybrid_check/combined.vcf.gz
+
+
+#first convert to geno format to run genomics_general scripts on
+sconda genomics_general
+python ../genomics_general/VCF_processing/parseVCF.py -i /hb/groups/kelley_lab/Rishi/hybrid_check/combined.vcf.gz --skipIndels -o ./combined.geno.gz
