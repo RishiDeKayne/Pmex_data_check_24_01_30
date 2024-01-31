@@ -58,9 +58,27 @@ VG210,VG
 sed -i 's/,/\t/g' indiv_raw.txt
 cut -f1 indiv_raw.txt > samples.txt
 
-bcftools view -S ./samples.txt -Oz -o combined_LUV_VG_indivs.vcf.gz /hb/groups/kelley_lab/Rishi/hybrid_check/combined.vcf.gz
+#convert.sh
+#!/bin/bash
+#SBATCH --job-name=convert
+#SBATCH --time=0-24:00:00
+#SBATCH --partition=128x24
+#SBATCH --output=convert.%j.out # output file
+#SBATCH --error=convert.%j.err # error file
+#SBATCH -N 1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=40GB 
 
+module load hb hb-gnu htslib/htslib-1.17 bwa-mem2/bwa-mem2-2.2.1 sambamba picard mosdepth samtools bcftools plink admixture
 
-#first convert to geno format to run genomics_general scripts on
-sconda genomics_general
-python ../genomics_general/VCF_processing/parseVCF.py -i /hb/groups/kelley_lab/Rishi/hybrid_check/combined.vcf.gz --skipIndels -o ./combined.geno.gz
+bcftools view -S ./samples.txt -Oz -o ./combined_LUV_VG_indivs.vcf.gz /hb/groups/kelley_lab/Rishi/hybrid_check/combined.vcf.gz
+
+python ../genomics_general/VCF_processing/parseVCF.py -i ./combined_LUV_VG_indivs.vcf.gz --skipIndels -o ./combined_LUV_VG_indivs.geno.gz
+
+touch ./convert.done
+
+##run
+module load hb hb-gnu htslib/htslib-1.17 bwa-mem2/bwa-mem2-2.2.1 sambamba picard mosdepth samtools bcftools plink admixture
+conda activate /hb/home/rdekayne/envs/general
+sbatch convert.sh
+
