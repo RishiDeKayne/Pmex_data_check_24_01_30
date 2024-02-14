@@ -134,6 +134,39 @@ sbatch pca.sh
 
 sed 
 
+#now do PCA but only on housekeeping genes:
+scp Table_S2_from_Ryan_et_al_2023.txt rdekayne@hb.ucsc.edu:/hb/home/rdekayne/Pmex_data_check_24_01_30
+
+grep "Broughton" Table_S2_from_Ryan_et_al_2023.txt > Broughton.txt
+grep "NuclearRef" Table_S2_from_Ryan_et_al_2023.txt > NuclearRef.txt
+cat Broughton.txt NuclearRef.txt > housekeeping.txt
+
+#want columns 9+11+12
+awk '{print $9,$11,$12}' housekeeping.txt > housekeeping.regions.txt
+sed -i 's/ /\t/g' housekeeping.regions.txt
+
+paste housekeeping1.regions.txt housekeeping2.regions.txt > all.housekeeping.regions.txt
+sed -i 's/\t/\-/g' all.housekeeping.regions.txt
+
+module load hb hb-gnu htslib/htslib-1.17 bwa-mem2/bwa-mem2-2.2.1 sambamba picard mosdepth samtools bcftools plink admixture
+bcftools view -T housekeeping.regions.txt -Oz -o ./filt.vcf.gz ./combined_LUV_VG_indivs_mac1_AN72.vcf.gz
+
+bcftools view -H ./combined_LUV_VG_indivs_mac1_AN72.vcf.gz | wc -l
+#26602
+
+bcftools view -H ./filt.vcf.gz | wc -l
+#6949
+
+plink --vcf filt.vcf.gz --double-id --allow-extra-chr --set-missing-var-ids @:# --make-bed --pca --out housekeeping_out
+
+scp rdekayne@hb.ucsc.edu:/hb/home/rdekayne/Pmex_data_check_24_01_30/*eigen* /Users/rishide-kayne/Library/CloudStorage/Dropbox/RishiMac2/Kelley_Lab/Puya
+
+#count private alleles
+## BCFtools --private
+#split by samples
+bcftools query -f '%CHROM %POS %AF\n' combined_LUV_VG_indivs_mac1_AN72.vcf.gz | head -3
+
 
 python ../genomics_general/VCF_processing/popgenWindows.py -w 100000 -m 5000 -g ./contig1.1.hap.realigned.raw.vcf.gz_filt_mindepth7_minqual30_AN224.geno.gz -o contig1.1.hap.div.regions.output.csv.gz -f phased -T 4 --ploidyFile /data/martin/genomics/analyses/Danaus_popgen/DC174/genotyping/sample.ploidy.txt -p crossed -p med -p orientis -p chrysippus -p klugii -p hybrid --popsFile /data/martin/genomics/analyses/Danaus_popgen/DC174/analysis/pi/popsfile_region.txt
+
 
