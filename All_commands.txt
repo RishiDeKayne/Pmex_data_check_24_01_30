@@ -162,9 +162,18 @@ plink --vcf filt.vcf.gz --double-id --allow-extra-chr --set-missing-var-ids @:# 
 scp rdekayne@hb.ucsc.edu:/hb/home/rdekayne/Pmex_data_check_24_01_30/*eigen* /Users/rishide-kayne/Library/CloudStorage/Dropbox/RishiMac2/Kelley_Lab/Puya
 
 #count private alleles
-## BCFtools --private
 #split by samples
-bcftools query -f '%CHROM %POS %AF\n' combined_LUV_VG_indivs_mac1_AN72.vcf.gz | head -3
+grep "LUV" indiv_raw.txt | cut -f1 > LUVsamples.txt
+grep "VG" indiv_raw.txt | cut -f1 > VGsamples.txt
+
+bcftools view -S ./LUVsamples.txt -Oz -o ./LUV_indivs_mac1_AN72.vcf.gz ./combined_LUV_VG_indivs_mac1_AN72.vcf.gz
+bcftools view -S ./VGsamples.txt -Oz -o ./VG_indivs_mac1_AN72.vcf.gz ./combined_LUV_VG_indivs_mac1_AN72.vcf.gz
+
+zcat VG_indivs_mac1_AN72.vcf.gz | grep -v "#" > VG.txt
+zcat LUV_indivs_mac1_AN72.vcf.gz | grep -v "#" > LUV.txt
+
+scp rdekayne@hb.ucsc.edu:/hb/home/rdekayne/Pmex_data_check_24_01_30/VG.txt /Users/rishide-kayne/Library/CloudStorage/Dropbox/RishiMac2/Kelley_Lab/Puya
+scp rdekayne@hb.ucsc.edu:/hb/home/rdekayne/Pmex_data_check_24_01_30/LUV.txt /Users/rishide-kayne/Library/CloudStorage/Dropbox/RishiMac2/Kelley_Lab/Puya
 
 
 python ../genomics_general/VCF_processing/popgenWindows.py -w 100000 -m 5000 -g ./contig1.1.hap.realigned.raw.vcf.gz_filt_mindepth7_minqual30_AN224.geno.gz -o contig1.1.hap.div.regions.output.csv.gz -f phased -T 4 --ploidyFile /data/martin/genomics/analyses/Danaus_popgen/DC174/genotyping/sample.ploidy.txt -p crossed -p med -p orientis -p chrysippus -p klugii -p hybrid --popsFile /data/martin/genomics/analyses/Danaus_popgen/DC174/analysis/pi/popsfile_region.txt
